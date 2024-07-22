@@ -8,7 +8,7 @@
 
   ### 运行项目
 
-  	nohup ./hydra.sh ssh.txt root pass.txt 5 res.txt > hydra.log &
+  	nohup ./hydra.sh ssh.txt root pass.txt 150 res.txt > hydra.log &
 
   ### 查看运行详情
 
