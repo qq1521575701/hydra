@@ -17,5 +17,6 @@
 
   	tail -f res.txt
   
-
+ ### 过滤查看
+ 
 	awk -F'host: |   ' '{ ip[$2]++ } { lines[$2] = $0 } END { for (i in ip) if (ip[i] == 1) print lines[i] }' res.txt > output.txt && cat output.txt
